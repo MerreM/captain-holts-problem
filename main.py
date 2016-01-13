@@ -44,16 +44,10 @@ class Game(object):
     def run_tests_for_weight(self):
         left = self.population[:6]
         right = self.population[6:]
-        print(left, " < ", right)
-        print(sum(left)<sum(right))
         first_result = sum(left)<sum(right)
         left = self.population[0:3] + self.population[6:9]
         right = self.population[3:6] + self.population[9:12]
-        print(left, " < ", right)
-        print(sum(left)<sum(right))
         second_result = sum(left)<sum(right)
-        print("Is first equal to second?")
-        print(first_result == second_result)
         if(first_result==second_result):
             equal_group = self.population[3:6] + self.population[6:9]
             unequal_group = self.population[0:3] + self.population[9:12]
@@ -61,9 +55,30 @@ class Game(object):
             unequal_group = self.population[3:6] + self.population[6:9]
             equal_group = self.population[0:3] + self.population[9:12]
         if(sum(equal_group) > sum(unequal_group)):
-            print("Odd one out is lighter")
+            return "Lighter"
         else:
-            print("Odd one out is heavier")
+            return "Heavier"
+
+    def run_quick_search(self):
+        left = self.population[:6]
+        right = self.population[6:]
+        if(sum(left)>sum(right)):
+            heavier = left
+        else:
+            heavier = right
+        left = heavier[0:3]
+        right = heavier[3:6]
+        if(sum(left)>sum(right) or sum(left)<sum(right)):
+            return "Heavier"
+        else:
+            return "Lighter"
+
+    def get_odd_one(self):
+        if self.odd_one_out.weight > 1:
+            return "Heavier"
+        else:
+            return "Lighter"
+
 
     def print_proof(self):
         print("\n\nProof!\n")
@@ -75,8 +90,15 @@ class Game(object):
 
 def main():
     game = Game()
-    game.run_tests_for_weight()
-    game.print_proof()
+    for i in range(0,100):
+        game = Game()
+        if not (game.run_tests_for_weight()==game.get_odd_one()):
+            print("INCORRECT")
+            return
+        if not (game.run_quick_search()==game.get_odd_one()):
+            print("INCORRECT")
+            return
+    
 
 
 if __name__ == '__main__':
